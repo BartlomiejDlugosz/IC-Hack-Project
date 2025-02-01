@@ -3,6 +3,8 @@ import os
 import openai
 from flask_login import login_user, login_required, logout_user, current_user
 from dotenv import load_dotenv
+import json
+
 from app import db, login_manager
 from app.models import User, Course
 from openai_integration import askGPT
@@ -167,27 +169,32 @@ def generate_analogy():
 
     try:
         # Generate the analogy
-        analogy = askGPT("You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.",
+        analogy = askGPT("""You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.
+        You will return the analogy based on the concept and interest provided in a JSON format in this style:
+        {
+            "analogy": "Your analogy here"
+        }""",
                                   prompt_analogy)
 
-        quiz_text = askGPT("You are an expert teacher who generates quiz questions based on explanations.",
+        quiz_text = askGPT("""You are an expert teacher who generates quiz questions based on explanations.
+        You will return a multiple-choice question based on the analogy provided in a JSON format in this style:
+        {
+            "question": "Your question here",
+            "options": [
+                "A": "Your options here",
+                "B": "Your options here",
+                "C": "Your options here",
+                "D": "Your options here"
+            ],
+            "correct_answer": "Correct answer here"
+        }""",
                            f"{prompt_analogy}\n\n{analogy}\n\n{prompt_quiz}")
         print(analogy)
         print(quiz_text)
-        # Parsing the quiz text into question, options, and correct answer
-        question_lines = quiz_text.split('\n')
-        question = question_lines[0]
-        options = {line[0]: line[3:] for line in question_lines[1:5]}  # Extract A-D options
-        correct_answer_line = [line for line in question_lines if "Correct Answer:" in line]
-        correct_answer = correct_answer_line[0].split(":")[-1].strip() if correct_answer_line else "A"
 
         return jsonify({
-            'analogy': analogy,
-            'quiz': {
-                'question': question,
-                'options': options,
-                'correct_answer': correct_answer
-            }
+            'analogy': json.loads(analogy)["analogy"],
+            'quiz': json.loads(quiz_text)
         })
 
     except Exception as e:
