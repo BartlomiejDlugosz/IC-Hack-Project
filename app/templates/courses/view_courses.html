@@ -1,0 +1,15 @@
+<ul class="list-group">
+  {% for course in courses %}
+      <li class="list-group-item">
+          <h4>{{ course.name }}</h4>
+          <p><strong>Difficulty:</strong> {{ course.difficulty_matrix }}</p>
+          <p><strong>Description:</strong> {{ course.description }}</p>
+          <p><strong>Author:</strong> {{ course.author.username }}</p>  <!-- Show the author's username -->
+          <a href="{{ url_for('main.view_course', id=course.id) }}" class="btn btn-info">View</a>
+          <a href="{{ url_for('main.edit_course', id=course.id) }}" class="btn btn-warning">Edit</a>
+          <form method="POST" action="{{ url_for('main.delete_course', id=course.id) }}" style="display:inline;">
+              <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+      </li>
+  {% endfor %}
+</ul>

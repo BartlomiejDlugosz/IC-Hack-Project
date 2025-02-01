@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>This is the dashboard</h1>
+        <p>Display all the courses that you have.</p>
+        <p>List of your courses:</p>
+
+        <div class="list-group">
+            {% for course in courses %}
+                <a href="{{ url_for('main.view_course', id=course.id) }}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{ course.name }}</h5>
+                    <p class="mb-1">{{ course.difficulty_matrix }}</p>
+                    <small>{{ course.description[:100] }}...</small> <!-- Displaying a truncated description -->
+                </a>
+            {% else %}
+                <p>No courses found. <a href="{{ url_for('main.create_course') }}">Create a new course</a></p>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('main.create_course') }}" class="btn btn-primary mt-3">Create a New Course</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
