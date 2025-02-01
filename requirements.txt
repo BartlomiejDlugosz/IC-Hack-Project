@@ -3,3 +3,4 @@ flask-login
 flask-session
 flask-sqlalchemy
 werkzeug
+python-dotenv
