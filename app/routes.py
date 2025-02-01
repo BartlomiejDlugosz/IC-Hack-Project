@@ -6,6 +6,8 @@ from app.models import User
 import os
 from dotenv import load_dotenv
 
+from openai_integration import askGPT
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -84,31 +86,11 @@ def generate_analogy():
 
     try:
         # Generate the analogy
-        analogy_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies."},
-                {"role": "user", "content": prompt_analogy}
-            ],
-            max_tokens=150,
-            temperature=0.7
-        )
+        analogy = askGPT("You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.",
+                                  prompt_analogy)
 
-        analogy = analogy_response['choices'][0]['message']['content'].strip()
-
-        # Generate the quiz based on the analogy
-        quiz_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are an expert teacher who generates quiz questions based on explanations."},
-                {"role": "user", "content": f"{prompt_analogy}\n\n{analogy}\n\n{prompt_quiz}"}
-            ],
-            max_tokens=150,
-            temperature=0.7
-        )
-
-        # Process the quiz output
-        quiz_text = quiz_response['choices'][0]['message']['content'].strip()
+        quiz_text = askGPT("You are an expert teacher who generates quiz questions based on explanations.",
+                           f"{prompt_analogy}\n\n{analogy}\n\n{prompt_quiz}")
 
         # Parsing the quiz text into question, options, and correct answer
         question_lines = quiz_text.split('\n')
