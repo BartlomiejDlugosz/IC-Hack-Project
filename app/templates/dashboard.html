@@ -26,7 +26,7 @@
 
         <a href="{{ url_for('main.create_course') }}" class="btn btn-primary mt-3">Create a New Course</a>
         <!-- If clicked the button above below section appears -->
-        <input type="hidden" id="interest" value="{{ interest }}">
+        <input type="text" id="interest" value="{{ interest }}">
         <input type="text" id="concept" placeholder="Enter CS concept (e.g., Recursion)">
         <button onclick="generateAnalogy()">Generate Analogy & Quiz</button>
     </div>
@@ -37,29 +37,23 @@
 
     <script>
       async function generateAnalogy() {
-      console.log('waiting');
-      const interest = document.getElementById('interest').value;
-      const concept = document.getElementById('concept').value;
+            document.getElementById('result').innerText = 'Loading...';
+            const interest = document.getElementById('interest').value;
+            const concept = document.getElementById('concept').value;
 
-      try {
-          const response = await fetch('/create-analogy', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ interest, concept })
-          });
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
+            // Clear previous results
+            document.getElementById('result').innerText = '';
+            document.getElementById('quiz-container').innerHTML = '';
+            document.getElementById('feedback').innerText = '';
+
+            const response = await fetch('/generate-analogy', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ interest, concept })
+            });
+
+            const data = await response.json();
           }
-
-          const data = await response.json();
-          console.log(data);
-          window.location.reload(true);
-
-      } catch (error) {
-          console.error('Error during fetch:', error);
-      }
-      }
-
     </script>
   </body>
 </html>

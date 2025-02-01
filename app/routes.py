@@ -203,19 +203,6 @@ def create_analogy():
 
     # Prompt for generating the analogy
     prompt_analogy = f"Explain {concept} using an analogy related to {interest}. Make it simple and engaging."
-
-    # Prompt for generating the quiz based on the analogy
-    prompt_quiz = f"""
-    Based on the analogy you provided for {concept}, create a multiple-choice question in the following format:
-    Question: [Your question here]
-    A) Option A
-    B) Option B
-    C) Option C
-    D) Option D
-    Correct Answer: [Specify A, B, C, or D]
-    Make sure to follow this format exactly to ensure proper parsing.
-    """
-
     try:
         analogy = askGPT("You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.",
                                   prompt_analogy)
@@ -234,6 +221,7 @@ def create_analogy():
         db.session.add(new_course)
         db.session.commit()
         return ''
+
         # question_lines = quiz_text.split('\n')
         # question = question_lines[0]
         # options = {line[0]: line[3:] for line in question_lines[1:5]}  # Extract A-D options
