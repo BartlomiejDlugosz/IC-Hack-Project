@@ -1,1 +1,31 @@
-<h1> Random</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Analogy App</title>
+</head>
+<body>
+    <h1>Learn CS Through What You Love</h1>
+    <input type="text" id="interest" placeholder="Enter your interest (e.g., Fishing)">
+    <input type="text" id="concept" placeholder="Enter CS concept (e.g., Recursion)">
+    <button onclick="generateAnalogy()">Generate Analogy</button>
+    <p id="result"></p>
+
+    <script>
+        async function generateAnalogy() {
+            const interest = document.getElementById('interest').value;
+            const concept = document.getElementById('concept').value;
+
+            const response = await fetch('/generate-analogy', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ interest, concept })
+            });
+
+            const data = await response.json();
+            document.getElementById('result').innerText = data.analogy;
+        }
+    </script>
+</body>
+</html>
