@@ -1,19 +1,14 @@
 from flask import Flask, render_template, request, jsonify
-import openai
-import os
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
 
-app = Flask(__name__)
+from app import create_app
+from openai_integration import askGPT
 
-# Securely load the API key from environment variables
-openai.api_key = os.getenv('OPENAI_API_KEY')
+app = create_app()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('templates/index.html')
 
 @app.route('/generate-analogy', methods=['POST'])
 def generate_analogy():
@@ -21,24 +16,17 @@ def generate_analogy():
     interest = data.get('interest')
     concept = data.get('concept')
 
-    prompt = f"Explain {concept} using an analogy related to {interest}. Make it simple and engaging."
 
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Use GPT-4 if available: "gpt-4"
-            messages=[
-                {"role": "system", "content": "You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=150,
-            temperature=0.7  # Controls creativity
-        )
+    systemPrompt = "You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies."
+    userPrompt = f"Explain {concept} using an analogy related to {interest}. Make it simple and engaging. Use HTML tags to format your response."
 
-        analogy = response['choices'][0]['message']['content'].strip()
+    analogy = askGPT(systemPrompt, userPrompt)
+
+
+    if analogy != None:
         return jsonify({'analogy': analogy})
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
