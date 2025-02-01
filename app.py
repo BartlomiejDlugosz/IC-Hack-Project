@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, jsonify
-from openai import OpenAI
-import os
+
+
+from app import create_app
 from openai_integration import askGPT
 
-app = Flask(__name__)
+app = create_app()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('templates/index.html')
 
 @app.route('/generate-analogy', methods=['POST'])
 def generate_analogy():
