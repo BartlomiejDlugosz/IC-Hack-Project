@@ -6,7 +6,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-
+    section_score = db.Column(db.Float, nullable=True)  # Stores scores, can be NULL
+    key_interest = db.Column(db.String(255), nullable=True)  # Stores user interests
     # Correct relationship with back_populates
     courses = db.relationship('Course', back_populates='author', lazy=True)
 
