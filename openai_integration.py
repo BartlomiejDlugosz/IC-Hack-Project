@@ -13,7 +13,7 @@ client = OpenAI(
 def askGPT(systemPrompt, userPrompt):
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",  # Use GPT-4 if available: "gpt-4"
+            model="gpt-4o-mini",  # Use GPT-4 if available: "gpt-4"
             messages=[
                 {"role": "system", "content": systemPrompt},
                 {"role": "user", "content": userPrompt}
