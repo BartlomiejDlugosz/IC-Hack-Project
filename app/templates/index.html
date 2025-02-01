@@ -62,38 +62,41 @@
                 document.getElementById('result').innerText = data.analogy;
 
                 const quizContainer = document.getElementById('quiz-container');
-                const quiz = data.quiz;
+                const quizzes = data.quizzes; // Updated to handle multiple quizzes
 
-                if (quiz) {
-                    // Display quiz question
-                    const question = document.createElement('p');
-                    question.innerText = quiz.question;
-                    quizContainer.appendChild(question);
+                if (quizzes && quizzes.length > 0) {
+                    quizzes.forEach((quiz, index) => {
+                        // Display quiz question
+                        const question = document.createElement('p');
+                        question.innerText = `${index + 1}. ${quiz.question}`;
+                        quizContainer.appendChild(question);
 
-                    // Display options
-                    for (const [key, option] of Object.entries(quiz.options)) {
-                        const label = document.createElement('label');
-                        label.classList.add('option');
-                        label.innerHTML = `
-                            <input type="radio" name="quiz-option" value="${key}"> ${key}: ${option}
-                        `;
-                        quizContainer.appendChild(label);
-                        quizContainer.appendChild(document.createElement('br'));
-                    }
+                        // Display options
+                        for (const [key, option] of Object.entries(quiz.options)) {
+                            const label = document.createElement('label');
+                            label.classList.add('option');
+                            label.innerHTML = `
+                                <input type="radio" name="quiz-option-${index}" value="${key}"> ${key}: ${option}
+                            `;
+                            quizContainer.appendChild(label);
+                            quizContainer.appendChild(document.createElement('br'));
+                        }
 
-                    // Submit button
-                    const submitButton = document.createElement('button');
-                    submitButton.innerText = 'Submit Answer';
-                    submitButton.onclick = () => checkAnswer(quiz.correct_answer);
-                    quizContainer.appendChild(submitButton);
+                        // Submit button for each question
+                        const submitButton = document.createElement('button');
+                        submitButton.innerText = 'Submit Answer';
+                        submitButton.onclick = () => checkAnswer(index, quiz.correct_answer);
+                        quizContainer.appendChild(submitButton);
+                        quizContainer.appendChild(document.createElement('hr'));
+                    });
                 }
             } else {
                 document.getElementById('result').innerText = data.error || 'Failed to generate analogy.';
             }
         }
 
-        function checkAnswer(correctAnswer) {
-            const selected = document.querySelector('input[name="quiz-option"]:checked');
+        function checkAnswer(index, correctAnswer) {
+            const selected = document.querySelector(`input[name="quiz-option-${index}"]:checked`);
             const feedback = document.getElementById('feedback');
 
             if (!selected) {
@@ -103,10 +106,10 @@
             }
 
             if (selected.value === correctAnswer) {
-                feedback.innerText = 'Correct! 🎉';
+                feedback.innerText = `Question ${index + 1}: Correct! 🎉`;
                 feedback.style.color = 'green';
             } else {
-                feedback.innerText = `Incorrect. The correct answer was ${correctAnswer}. ❌`;
+                feedback.innerText = `Question ${index + 1}: Incorrect. The correct answer was ${correctAnswer}. ❌`;
                 feedback.style.color = 'red';
             }
         }

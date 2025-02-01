@@ -74,6 +74,7 @@ def logout():
 
 @main.route('/generate-analogy', methods=['POST'])
 def generate_analogy():
+    NUM_QUESTIONS = 3
     data = request.json
     interest = data.get('interest')
     concept = data.get('concept')
@@ -82,8 +83,8 @@ def generate_analogy():
     prompt_analogy = f"Explain {concept} using an analogy related to {interest}. Make it simple and engaging."
 
     # Prompt for generating the quiz based on the analogy
-    prompt_quiz = f"""
-    Based on the analogy you provided for {concept}, create a multiple-choice question in the following format:
+    prompt_quiz_template = """
+    Based on the analogy you provided for {concept}, create a unique multiple-choice question in the following format:
     Question: [Your question here]
     A) Option A
     B) Option B
@@ -96,26 +97,33 @@ def generate_analogy():
     try:
         # Generate the analogy
         analogy = askGPT("You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.",
-                                  prompt_analogy)
+                         prompt_analogy)
 
-        quiz_text = askGPT("You are an expert teacher who generates quiz questions based on explanations.",
-                           f"{prompt_analogy}\n\n{analogy}\n\n{prompt_quiz}")
-        print(analogy)
-        print(quiz_text)
-        # Parsing the quiz text into question, options, and correct answer
-        question_lines = quiz_text.split('\n')
-        question = question_lines[0]
-        options = {line[0]: line[3:] for line in question_lines[1:5]}  # Extract A-D options
-        correct_answer_line = [line for line in question_lines if "Correct Answer:" in line]
-        correct_answer = correct_answer_line[0].split(":")[-1].strip() if correct_answer_line else "A"
+        # Generate multiple unique quiz questions
+        quizzes = []
+        for i in range(NUM_QUESTIONS):
+            # Adding an index to ensure uniqueness
+            prompt_quiz = prompt_quiz_template.format(concept=concept) + f" This is question number {i + 1}."
 
-        return jsonify({
-            'analogy': analogy,
-            'quiz': {
+            quiz_text = askGPT("You are an expert teacher who generates quiz questions based on explanations.",
+                               f"{prompt_analogy}\n\n{analogy}\n\n{prompt_quiz}")
+
+            # Parsing the quiz text into question, options, and correct answer
+            question_lines = quiz_text.strip().split('\n')
+            question = question_lines[0].replace('Question: ', '').strip()
+            options = {line[0]: line[3:].strip() for line in question_lines[1:5]}  # Extract A-D options
+            correct_answer_line = [line for line in question_lines if "Correct Answer:" in line]
+            correct_answer = correct_answer_line[0].split(":")[-1].strip() if correct_answer_line else "A"
+
+            quizzes.append({
                 'question': question,
                 'options': options,
                 'correct_answer': correct_answer
-            }
+            })
+
+        return jsonify({
+            'analogy': analogy,
+            'quizzes': quizzes
         })
 
     except Exception as e:
