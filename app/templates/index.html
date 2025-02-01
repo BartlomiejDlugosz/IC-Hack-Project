@@ -3,20 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS Analogy App</title>
+    <title>CS Analogy App with Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 8px;
+        }
+        #quiz-container {
+            margin-top: 20px;
+        }
+        .option {
+            margin: 5px 0;
+        }
+        #feedback {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Learn CS Through What You Love</h1>
     <input type="text" id="interest" placeholder="Enter your interest (e.g., Fishing)">
     <input type="text" id="concept" placeholder="Enter CS concept (e.g., Recursion)">
-    <button onclick="generateAnalogy()">Generate Analogy</button>
+    <button onclick="generateAnalogy()">Generate Analogy & Quiz</button>
+
+    <h2>Analogy:</h2>
     <p id="result"></p>
+
+    <h2>Quiz:</h2>
+    <div id="quiz-container"></div>
+
+    <p id="feedback"></p>
 
     <script>
         async function generateAnalogy() {
             document.getElementById('result').innerText = 'Loading...';
             const interest = document.getElementById('interest').value;
             const concept = document.getElementById('concept').value;
+
+            // Clear previous results
+            document.getElementById('result').innerText = '';
+            document.getElementById('quiz-container').innerHTML = '';
+            document.getElementById('feedback').innerText = '';
 
             const response = await fetch('/generate-analogy', {
                 method: 'POST',
@@ -25,7 +57,58 @@
             });
 
             const data = await response.json();
-            document.getElementById('result').innerHTML = data.analogy;
+
+            if (data.analogy) {
+                document.getElementById('result').innerText = data.analogy;
+
+                const quizContainer = document.getElementById('quiz-container');
+                const quiz = data.quiz;
+
+                if (quiz) {
+                    // Display quiz question
+                    const question = document.createElement('p');
+                    question.innerText = quiz.question;
+                    quizContainer.appendChild(question);
+
+                    // Display options
+                    for (const [key, option] of Object.entries(quiz.options)) {
+                        const label = document.createElement('label');
+                        label.classList.add('option');
+                        label.innerHTML = `
+                            <input type="radio" name="quiz-option" value="${key}"> ${key}: ${option}
+                        `;
+                        quizContainer.appendChild(label);
+                        quizContainer.appendChild(document.createElement('br'));
+                    }
+
+                    // Submit button
+                    const submitButton = document.createElement('button');
+                    submitButton.innerText = 'Submit Answer';
+                    submitButton.onclick = () => checkAnswer(quiz.correct_answer);
+                    quizContainer.appendChild(submitButton);
+                }
+            } else {
+                document.getElementById('result').innerText = data.error || 'Failed to generate analogy.';
+            }
+        }
+
+        function checkAnswer(correctAnswer) {
+            const selected = document.querySelector('input[name="quiz-option"]:checked');
+            const feedback = document.getElementById('feedback');
+
+            if (!selected) {
+                feedback.innerText = 'Please select an answer.';
+                feedback.style.color = 'orange';
+                return;
+            }
+
+            if (selected.value === correctAnswer) {
+                feedback.innerText = 'Correct! 🎉';
+                feedback.style.color = 'green';
+            } else {
+                feedback.innerText = `Incorrect. The correct answer was ${correctAnswer}. ❌`;
+                feedback.style.color = 'red';
+            }
         }
     </script>
 </body>
