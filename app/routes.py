@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from app import db, login_manager
 from app.models import User, Course
 from openai_integration import askGPT
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -216,44 +217,50 @@ def create_analogy():
     """
 
     try:
-        content = askGPT(f"Give me a title of the course {prompt_analogy}, a short description and a description of difficulty in the following format do not add any quotation strings, without any other comments: title---description---difficulty", prompt_analogy)
         analogy = askGPT("You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.",
                                   prompt_analogy)
 
-        quiz_text = askGPT("You are an expert teacher who generates quiz questions based on explanations.",
-                           f"{prompt_analogy}\n\n{analogy}\n\n{prompt_quiz}")
 
-        print(content)
-        print(analogy)
-        print(quiz_text)
-        contents = content.split("---")
-        question_lines = quiz_text.split('\n')
-        question = question_lines[0]
-        options = {line[0]: line[3:] for line in question_lines[1:5]}  # Extract A-D options
-        correct_answer_line = [line for line in question_lines if "Correct Answer:" in line]
-        correct_answer = correct_answer_line[0].split(":")[-1].strip() if correct_answer_line else "A"
-        print(contents)
-        print('Loading')
+        # Extracting values from the JSON object
+
         new_course = Course(
-            name=contents[0],  # The title from the split content
-            difficulty_matrix=contents[2],  # The difficulty description from the split content
-            description=contents[1],  # The short description from the split content
+            name='test',  # The title from the split content
+            difficulty_matrix='test',  # The difficulty description from the split content
+            description='',  # The short description from the split content
             content=analogy,  # Set the analogy as the course content
-            questions=quiz_text,  # Set the generated quiz text as the questions
+            questions='quiz_text',  # Set the generated quiz text as the questions
             author_id=current_user.id  # Ensure this is the current logged-in user's ID
-            )
-        print('Loading')
+        )
         db.session.add(new_course)
         db.session.commit()
-        print('Loading')
-        return jsonify({
-            'analogy': analogy,
-            'quiz': {
-                'question': question,
-                'options': options,
-                'correct_answer': correct_answer
-            }
-        })
+        return ''
+        # question_lines = quiz_text.split('\n')
+        # question = question_lines[0]
+        # options = {line[0]: line[3:] for line in question_lines[1:5]}  # Extract A-D options
+        # correct_answer_line = [line for line in question_lines if "Correct Answer:" in line]
+        # correct_answer = correct_answer_line[0].split(":")[-1].strip() if correct_answer_line else "A"
+        # print(contents)
+        # print('Loading')
+        # new_course = Course(
+        #     name=contents[0],  # The title from the split content
+        #     difficulty_matrix=contents[2],  # The difficulty description from the split content
+        #     description=contents[1],  # The short description from the split content
+        #     content=analogy,  # Set the analogy as the course content
+        #     questions=quiz_text,  # Set the generated quiz text as the questions
+        #     author_id=current_user.id  # Ensure this is the current logged-in user's ID
+        #     )
+        # print('Loading')
+        # db.session.add(new_course)
+        # db.session.commit()
+        # print('Loading')
+        # return jsonify({
+        #     'analogy': analogy,
+        #     'quiz': {
+        #         'question': question,
+        #         'options': options,
+        #         'correct_answer': correct_answer
+        #     }
+        # })
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

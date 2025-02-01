@@ -37,19 +37,29 @@
 
     <script>
       async function generateAnalogy() {
-            console.log('waiting')
-            const interest = document.getElementById('interest').value;
-            const concept = document.getElementById('concept').value;
-            const response = await fetch('/create-analogy', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ interest, concept })
-            });
-            console.log('waiting')
-            const data = await response.json();
-            console.log(response)
-            window.location.reload();
+      console.log('waiting');
+      const interest = document.getElementById('interest').value;
+      const concept = document.getElementById('concept').value;
+
+      try {
+          const response = await fetch('/create-analogy', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ interest, concept })
+          });
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
           }
+
+          const data = await response.json();
+          console.log(data);
+          window.location.reload(true);
+
+      } catch (error) {
+          console.error('Error during fetch:', error);
+      }
+      }
+
     </script>
   </body>
 </html>
