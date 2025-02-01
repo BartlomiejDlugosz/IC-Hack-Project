@@ -1,0 +1,23 @@
+<form method="POST">
+  <div class="form-group">
+      <label for="name">Course Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ course.name }}" required>
+  </div>
+  <div class="form-group">
+      <label for="difficulty_matrix">Difficulty</label>
+      <input type="text" class="form-control" id="difficulty_matrix" name="difficulty_matrix" value="{{ course.difficulty_matrix }}" required>
+  </div>
+  <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" required>{{ course.description }}</textarea>
+  </div>
+  <div class="form-group">
+      <label for="content">Content</label>
+      <textarea class="form-control" id="content" name="content" required>{{ course.content }}</textarea>
+  </div>
+  <div class="form-group">
+      <label for="questions">Questions</label>
+      <textarea class="form-control" id="questions" name="questions" required>{{ course.questions }}</textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Update Course</button>
+</form>

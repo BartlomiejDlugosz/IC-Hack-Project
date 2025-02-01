@@ -16,7 +16,7 @@ def create_app():
     login_manager.init_app(app)
     Session(app)
 
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'main.login'
 
     # Import blueprints
     from app.routes import main

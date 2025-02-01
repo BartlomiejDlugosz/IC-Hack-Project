@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_login import login_user, login_required, logout_user, current_user
 from app import db, login_manager
-from app.models import User
+from app.models import User, Course
 
 # Define Blueprint
 main = Blueprint('main', __name__)
@@ -53,7 +53,8 @@ def login():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    return f'Hello, {current_user.username}! Welcome to your dashboard. <a href="/logout">Logout</a>'
+    courses = Course.query.filter_by(author_id=current_user.id).all()
+    return render_template('dashboard.html', courses=courses)
 
 @main.route('/logout')
 @login_required
@@ -62,3 +63,73 @@ def logout():
     logout_user()
     flash('Logged out successfully.', 'success')
     return redirect(url_for('main.home'))
+
+
+# All methods for courses ---------------------
+@main.route('/course/create', methods=['GET', 'POST'])
+@login_required
+def create_course():
+    if request.method == 'POST':
+        name = request.form['name']
+        difficulty_matrix = request.form['difficulty_matrix']
+        description = request.form['description']
+        content = request.form['content']
+        questions = request.form['questions']
+
+        # Create the new course with the logged-in user as the author
+        new_course = Course(
+            name=name,
+            difficulty_matrix=difficulty_matrix,
+            description=description,
+            content=content,
+            questions=questions,
+            author_id=current_user.id  # Set the author_id to the current user's ID
+        )
+        db.session.add(new_course)
+        db.session.commit()
+        flash('Course created successfully!', 'success')
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('courses/create_course.html')
+
+@main.route('/course/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_course(id):
+    course = Course.query.get_or_404(id)
+
+    # Ensure the current user is the author of the course
+    if course.author_id != current_user.id:
+        flash('You do not have permission to edit this course.', 'danger')
+        return redirect(url_for('main.view_courses'))
+
+    if request.method == 'POST':
+        course.name = request.form['name']
+        course.difficulty_matrix = request.form['difficulty_matrix']
+        course.description = request.form['description']
+        course.content = request.form['content']
+        course.questions = request.form['questions']
+
+        db.session.commit()
+        flash('Course updated successfully!', 'success')
+        return redirect(url_for('main.view_course', id=course.id))
+
+    return render_template('courses/edit_course.html', course=course)
+
+@main.route('/courses')
+def view_courses():
+    courses = Course.query.all()
+    return render_template('courses/view_courses.html', courses=courses)
+
+@main.route('/course/<int:id>')
+def view_course(id):
+    course = Course.query.get_or_404(id)
+    return render_template('courses/view_course_detail.html', course=course)
+
+@main.route('/course/delete/<int:id>', methods=['POST'])
+def delete_course(id):
+    # Your delete logic here
+    course = Course.query.get_or_404(id)
+    db.session.delete(course)
+    db.session.commit()
+    flash('Course deleted successfully', 'success')
+    return redirect(url_for('main.dashboard'))

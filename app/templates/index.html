@@ -6,26 +6,11 @@
     <title>CS Analogy App</title>
 </head>
 <body>
-    <h1>Learn CS Through What You Love</h1>
-    <input type="text" id="interest" placeholder="Enter your interest (e.g., Fishing)">
-    <input type="text" id="concept" placeholder="Enter CS concept (e.g., Recursion)">
-    <button onclick="generateAnalogy()">Generate Analogy</button>
-    <p id="result"></p>
+    <h1>Bridged Home page</h1>
+    <p> Interactive design of the layout</p>
+    <p> Maybe have a trvia design </p>
+    <!-- This leads to user dashboard which requires login-->
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
 
-    <script>
-        async function generateAnalogy() {
-            const interest = document.getElementById('interest').value;
-            const concept = document.getElementById('concept').value;
-
-            const response = await fetch('/generate-analogy', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ interest, concept })
-            });
-
-            const data = await response.json();
-            document.getElementById('result').innerText = data.analogy;
-        }
-    </script>
 </body>
 </html>
