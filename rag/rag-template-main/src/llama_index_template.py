@@ -7,7 +7,11 @@ from llama_index.embeddings.openai import OpenAIEmbedding, OpenAIEmbeddingModelT
 PERSIST_DIR = "./storage"
 DATA_DIR = "./data"
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_KEY")
+
+
+
+print("Key is", OPENAI_API_KEY )
 
 def initialize_index(force_rebuild=False):
     if not os.path.exists(PERSIST_DIR) or force_rebuild:

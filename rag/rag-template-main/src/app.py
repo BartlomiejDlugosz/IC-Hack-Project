@@ -9,7 +9,7 @@ app.llama_index = initialize_index()
 def query(user_query: str):
     try:
         retrieval_result = query_index(app.llama_index, user_query)
-
+        print({"result": retrieval_result.response})
         return {
             "result": retrieval_result.response
         }
