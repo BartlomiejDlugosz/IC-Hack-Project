@@ -82,7 +82,16 @@ def generate_analogy():
     prompt_analogy = f"Explain {concept} using an analogy related to {interest}. Make it simple and engaging."
 
     # Prompt for generating the quiz based on the analogy
-    prompt_quiz = f"Based on the analogy you provided for {concept}, create a multiple-choice question with 4 options (A, B, C, D) and indicate the correct answer at the end like 'Correct Answer: A'."
+    prompt_quiz = f"""
+    Based on the analogy you provided for {concept}, create a multiple-choice question in the following format:
+    Question: [Your question here]
+    A) Option A
+    B) Option B
+    C) Option C
+    D) Option D
+    Correct Answer: [Specify A, B, C, or D]
+    Make sure to follow this format exactly to ensure proper parsing.
+    """
 
     try:
         # Generate the analogy
@@ -91,7 +100,8 @@ def generate_analogy():
 
         quiz_text = askGPT("You are an expert teacher who generates quiz questions based on explanations.",
                            f"{prompt_analogy}\n\n{analogy}\n\n{prompt_quiz}")
-
+        print(analogy)
+        print(quiz_text)
         # Parsing the quiz text into question, options, and correct answer
         question_lines = quiz_text.split('\n')
         question = question_lines[0]
