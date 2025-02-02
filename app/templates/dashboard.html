@@ -1,65 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+{% extends "base.html" %}
+{% block content %}
 <body>
-    <div class="container mt-5">
-        <h1>This is the dashboard</h1>
-        <p>Display all the courses that you have.</p>
-        <p>List of your courses:</p>
-
-        <div class="list-group">
+  <div class="background-image">
+  <div class="main-container smaller-border">
+    <div class="padding-top container">
+        <h3>{{username}}'s personal hub</h3>
+        <p>Time to start learning something new! New day new you.</p>
+        <div class="list-group ">
             {% for course in courses %}
-                <a href="{{ url_for('main.view_course', id=course.id) }}" class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">{{ course.name }}</h5>
-                    <p class="mb-1">{{ course.difficulty_matrix }}</p>
-                    <small>{{ course.description[:100] }}...</small> <!-- Displaying a truncated description -->
-                </a>
+              <div class="padding-20">
+              <a href="{{ url_for('main.view_course', id=course.id) }}" class="backgroundcolor list-group-item list-group-item-action">
+                <div class="card-product-infos">
+
+                  <h5 class="card-txt"><i class="fa-solid fa-book"></i>  {{ course.name }}</h2>
+                  <p class="card-txt">{{ course.description[:100] }}...</p>
+                  <small class="card-txt">{{ course.difficulty_matrix }}</small>
+                </div>
+              </a>
+            </div>
+            </div>
             {% else %}
                 <p>No courses found.
             {% endfor %}
+            <div class="container padding-40">
+              <a href="{{ url_for('main.create_course') }}" class="btn btn-flat">Create a New Course</a>
+            </div>
         </div>
-
-        <a href="{{ url_for('main.create_course') }}" class="btn btn-primary mt-3">Create a New Course</a>
-        <!-- If clicked the button above below section appears -->
-        <input type="hidden" id="interest" value="{{ interest }}">
-        <input type="text" id="concept" placeholder="Enter CS concept (e.g., Recursion)">
-        <button onclick="generateAnalogy()">Generate Analogy & Quiz</button>
-    </div>
-
+      </div>
+      </div>
+  </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-      async function generateAnalogy() {
-      console.log('waiting');
-      const interest = document.getElementById('interest').value;
-      const concept = document.getElementById('concept').value;
-
-      try {
-          const response = await fetch('/create-analogy', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ interest, concept })
-          });
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const data = await response.json();
-          console.log(data);
-          window.location.reload(true);
-
-      } catch (error) {
-          console.error('Error during fetch:', error);
-      }
-      }
 
     </script>
   </body>
-</html>
+{% endblock %}

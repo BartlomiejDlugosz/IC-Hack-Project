@@ -1,11 +1,68 @@
-<h2>{{ course.name }}</h2>
-<p><strong>Difficulty Level:</strong> {{ course.difficulty_matrix }}</p>
-<p><strong>Description:</strong> {{ course.description }}</p>
-<p><strong>Content:</strong> {{ course.content }}</p>
-<p><strong>Questions:</strong> {{ course.questions }}</p>
-<p><strong>Author:</strong> {{ course.author.username }}</p>  <!-- Show the author's username -->
-
-<a href="{{ url_for('main.edit_course', id=course.id) }}" class="btn btn-warning">Edit</a>
+{% extends "base.html" %}
+{% block content %}
+<div class="container padding-top">
+  <div class="display-apart">
+  <h3>{{ course.name }}</h2>
+<div>
+    <a href="{{ url_for('main.edit_course', id=course.id) }}" class="btn btn-flat"><i class="fa-solid fa-pen-to-square"></i></a>
 <form method="POST" action="{{ url_for('main.delete_course', id=course.id) }}" style="display:inline;">
-    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="submit" class="btn btn-flat"><i class="fa-solid fa-delete-left"></i></button>
 </form>
+</div>
+</div>
+    <p><strong>Difficulty Level:</strong> {{ course.difficulty_matrix }}</p>
+    <p><strong>{{ course.description }}</p>
+    <p><strong>Content:</strong> {{ course.content }}</p>
+    <!-- <p><strong>Questions:</strong> {{ course.questions }}</p> -->
+    <!-- <p><strong>Author:</strong> {{ course.author.username }}</p> -->
+
+
+    <div id="explanation-section" class="container padding-top">
+      <h3>Section explantion</h3>
+      <p>Your test</p>
+      </div>
+    </div>
+    <div id="four-question-template" class="container padding-top">
+      <h3>Check the question here.</h3>
+      <div class="display-evenly ">
+        <p class="padding-20 answer mr">Answer 1</p><p class="padding-20 answer ml">Answer 1</p>
+      </div>
+      <div class="display-evenly">
+        <p class="padding-20 answer mr">Answer 1</p><p class="padding-20 answer ml">Answer 1</p>
+      </div>
+      <a href="#" class="btn btn-flat padding-top">Check</a>
+    </div>
+    <div id="text-question" class="container">
+      <h3>Check the question here.</h3>
+      <div class="display-evenly ">
+        <input type="text" class="answer">
+      </div>
+      <div class="padding-top">
+        <a href="#" class="btn btn-flat ">Check</a>
+      </div>
+    </div>
+    <div id="victory" class="container center">
+      <h3>Congrats!!!</h3>
+      <h5>Score X/X</h5>
+      <img style="max-width: 50%;" src="https://media.giphy.com/media/QqMKFi59zy4Qo/giphy.gif?cid=ecf05e47mine3b6rzpkri7lnnrsficn88sgyzc00tvcrl1jo&ep=v1_gifs_search&rid=giphy.gif&ct=g">
+      <div class="display-evenly padding-top">
+        <a href="#" class="btn btn-flat">Share results</a>
+        <a href="#" class="btn btn-flat">Next course</a>
+      </div>
+    </div>
+    <div id="victory" class="container center">
+      <h3>Congrats!!!</h3>
+      <h5>Score X/X</h5>
+      <img style="max-width: 50%;" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjc2bGk2c2ppbno1cHI5bzk4czk5MGo0MnBsOGt6eXh4cXlnc3lhaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/CoND5j6Bn1QZUgm1xX/giphy.gif">
+      <div class="padding-top">
+        <a href="#" class="btn btn-flat ">Try again</a>
+      </div>
+    </div>
+
+    <div class="display-apart padding-top">
+      <a href="#" class="btn btn-flat">Back</a>
+      <a href="#" class="btn btn-flat">Next</a>
+    </div>
+
+</div>
+{% endblock %}

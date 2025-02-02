@@ -64,9 +64,10 @@ def login():
 @main.route('/dashboard')
 @login_required
 def dashboard():
+    username = current_user.username
     interest = current_user.key_interest
     courses = Course.query.filter_by(author_id=current_user.id).all()
-    return render_template('dashboard.html', courses=courses, interest=interest)
+    return render_template('dashboard.html', courses=courses, interest=interest, username=username)
 
 @main.route('/logout')
 @login_required

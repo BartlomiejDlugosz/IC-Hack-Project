@@ -1,37 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS Analogy App with Quiz</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        input, button {
-            margin: 5px 0;
-            padding: 8px;
-        }
-        #quiz-container {
-            margin-top: 20px;
-        }
-        .option {
-            margin: 5px 0;
-        }
-        #feedback {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-<!-- AIM -->
-    <h1>Bridged Home page</h1>
-    <p> Interactive design of the layout</p>
-    <p> Maybe have a trvia design </p>
-    <!-- This leads to user dashboard which requires login-->
-    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div class="">
+  <div class="banner" style="background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url(https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/background.png);">
+    <div class="container">
+      <h1><strong>Bridged</strong> learning personalised to you!</h1>
+      <p>You're never too old to learn something new! Coding is just another way to solve problems and create amazing things. Soon you'll be building something awesome</p>
+      <a class="btn btn-flat" href="{{url_for('main.dashboard')}}">Discover</a>
+    </div>
+  </div>
+  </div>
+{% endblock %}

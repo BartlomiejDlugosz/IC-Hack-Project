@@ -1,0 +1,147 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Background Image */
+.background-image {
+  position: absolute;
+    top: 0;
+    left: 0;
+    /* margin: 5rem; */
+    width: 100%;
+    /* height: 80%; */
+    background-image: url(https://media.giphy.com/media/L1L9tRO5EECr3Nm9YH/giphy.gif?cid=790b7611dvy75paz3vf8y7x9v9v32l9ykd8rkf1qa0r6vcu6&ep=v1_gifs_search&rid=giphy.gif&ct=g);
+    background-size: cover;
+    background-position: center;
+}
+
+/* Body Styling */
+body {
+  font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+    color: #333;
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+}
+
+.smaller-border{
+  margin: 1rem  !important;
+  padding: 10px !important;
+}
+
+/* Main Container Styling */
+.main-container {
+  background-color: rgb(255, 255, 255);
+  padding: 40px;
+  margin: 5rem;
+  border-radius: 4px;
+  text-align: center;
+  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); */
+  backdrop-filter: blur(-20px);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Headings */
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #000000;
+}
+
+.white{
+  color: white !important;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* Button Styling */
+a.btn {
+  display: inline-block;
+  background-color: #000000; /* Dark gray button */
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 15px 30px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+a.btn:hover {
+  background-color: #444;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Trivia Box Styling */
+.trivia-container {
+  background-color: #fff;
+  border: 2px solid #333;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 650px;
+  margin: 30px auto;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.trivia-container:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.card-product {
+  overflow: hidden;
+  height: 120px;
+  background: white;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+}
+
+.card-product .block {
+  height: 100%;
+  width: 120px;
+  object-fit: cover;
+}
+
+.card-product h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.card-product p {
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: .7;
+  margin-bottom: 0;
+  margin-top: 8px;
+}
+
+.card-product .card-product-infos {
+  padding: 16px;
+}
