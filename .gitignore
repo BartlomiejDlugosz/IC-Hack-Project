@@ -1,4 +1,6 @@
 .env
 env/
 .idea/
-instance
+instance/users.db
+flask_session/*
+**/__pycache__/*

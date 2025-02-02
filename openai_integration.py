@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from openai import OpenAI
 import os
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -23,6 +24,7 @@ def askGPT(systemPrompt, userPrompt):
         )
 
         response = response.choices[0].message.content.strip()
+        response = re.sub(r"```(json)?\s*|\s*```", "", response).strip()
 
         return response
 
