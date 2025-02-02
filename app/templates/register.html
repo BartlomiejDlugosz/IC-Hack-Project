@@ -3,7 +3,7 @@
 <body>
     <div class="container d-flex flex-column justify-content-center align-items-center">
         <div id="register-sequence" class="w-100 text-center">
-            {% with messages = get_flashed_messages(with_categories=true) %}
+            <!-- {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <ul class="list-unstyled">
                         {% for category, message in messages %}
@@ -11,7 +11,7 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
-            {% endwith %}
+            {% endwith %} -->
 
             <!-- Sequential Registration Form -->
             <form method="POST" id="sequential-register-form">
@@ -41,6 +41,7 @@
 
                 <!-- Step 4: Fake Tech Savvy Question -->
                 <div class="form-step d-none centered" id="step-4">
+                  <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWt3a3VhcHc1N280NDEwZHY5bm9kcnJvcXRtZjJsY3g3eTE5YjB3cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kEuYvbsmex8iLqZkJq/giphy.gif" alt="Name GIF" class="mb-4" style="max-width: 200px;">
                     <h3>How tech-savvy are you?</h3>
                     <div class="my-3">
                         <button type="button" class="btn btn-outline-secondary mx-1">Beginner</button>
