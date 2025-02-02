@@ -151,20 +151,8 @@ class OCRProcessor:
         self.save_image(inpainted_img, save_path)
         return save_path
 
-
-if __name__ == "__main__":
-    # This defines the use case
-
-    hobby = "Fishing"
-    topic = "Standard deviation"
-    analogy = "Standard deviation can be understood as variation in fish size"
-    concept_breakdown = "Standard deviation measures the amount of variation or dispersion of a set of values. In fishing, if the fish sizes are close to the average size, the standard deviation is low. If the fish sizes vary greatly, the standard deviation is high."
-
-
     
-async def main():
-
-        
+async def main(hobby:str, topic:str, analogy:str, concept_breakdown:str):
     load_dotenv()
     openai_key = os.environ.get("OPENAI_KEY")
     
@@ -175,22 +163,13 @@ async def main():
     
 
     image_generator = DalleProcessor(openai_key)
-
-
-
-
-
     loop = asyncio.get_event_loop()
-
     ocr_main = await loop.run_in_executor(None, OCRProcessor)
-    
-    
     saved_image_path = await loop.run_in_executor(None, image_generator.generate_and_save, hobby, topic, analogy, concept_breakdown)
 
     ocr_main.inpaint_and_save(saved_image_path, saved_image_path)
 
     print(saved_image_path)
-
     return saved_image_path
 
 if __name__ == "__main__":
