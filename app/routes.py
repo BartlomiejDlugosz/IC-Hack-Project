@@ -137,7 +137,7 @@ Return the table of contents for the course in the following JSON format exactly
         db.session.add(new_course)
         db.session.commit()
         flash('Course created successfully!', 'success')
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('main.view_course', id=new_course.id))
     return render_template('courses/create_course.html')
 
 @main.route('/course/edit/<int:id>', methods=['GET', 'POST'])
