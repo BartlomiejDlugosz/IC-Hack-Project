@@ -1,13 +1,14 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session, jsonify
+import os
 import openai
 from flask_login import login_user, login_required, logout_user, current_user
-from app import db, login_manager
-from app.models import User
-import os
 from dotenv import load_dotenv
+from app import db, login_manager
+from app.models import User, Course
 import json
 
 from openai_integration import askGPT
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -63,7 +64,9 @@ def login():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    return f'Hello, {current_user.username}! Welcome to your dashboard. <a href="/logout">Logout</a>'
+    interest = current_user.key_interest
+    courses = Course.query.filter_by(author_id=current_user.id).all()
+    return render_template('dashboard.html', courses=courses, interest=interest)
 
 @main.route('/logout')
 @login_required
@@ -73,6 +76,84 @@ def logout():
     flash('Logged out successfully.', 'success')
     return redirect(url_for('main.home'))
 
+
+# All methods for courses ---------------------
+@main.route('/course/create', methods=['GET', 'POST'])
+@login_required
+def create_course():
+    print(request)
+    interest = current_user.key_interest
+    print(interest)
+    if request.method == 'POST':
+        name = request.form['name']
+        difficulty_matrix = request.form['difficulty_matrix']
+        description = request.form['description']
+        content = request.form['content']
+        questions = request.form['questions']
+        # interest = request.form['interest']
+        prompt_analogy = f"Explain {name} using an analogy related to . Make it simple and engaging."
+        print('Prompt Prompt')
+        print(prompt_analogy)
+        analogy = askGPT(f"Create the table of content for the following prompt to learn the topic, do not add bolding {prompt_analogy}", prompt_analogy)
+        # Create the new course with the logged-in user as the author
+        new_course = Course(
+            name=name,
+            difficulty_matrix=difficulty_matrix,
+            description=description,
+            content=analogy,
+            questions=questions,
+            author_id=current_user.id  # Set the author_id to the current user's ID
+        )
+
+        db.session.add(new_course)
+        db.session.commit()
+        flash('Course created successfully!', 'success')
+        return redirect(url_for('main.dashboard'))
+    return render_template('courses/create_course.html')
+
+@main.route('/course/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_course(id):
+    course = Course.query.get_or_404(id)
+
+    # Ensure the current user is the author of the course
+    if course.author_id != current_user.id:
+        flash('You do not have permission to edit this course.', 'danger')
+        return redirect(url_for('main.view_courses'))
+
+    if request.method == 'POST':
+        course.name = request.form['name']
+        course.difficulty_matrix = request.form['difficulty_matrix']
+        course.description = request.form['description']
+        course.content = request.form['content']
+        course.questions = request.form['questions']
+
+        db.session.commit()
+        flash('Course updated successfully!', 'success')
+        return redirect(url_for('main.view_course', id=course.id))
+
+    return render_template('courses/edit_course.html', course=course)
+
+@main.route('/courses')
+def view_courses():
+    courses = Course.query.all()
+    return render_template('courses/view_courses.html', courses=courses)
+
+@main.route('/course/<int:id>')
+def view_course(id):
+    course = Course.query.get_or_404(id)
+    return render_template('courses/view_course_detail.html', course=course)
+
+@main.route('/course/delete/<int:id>', methods=['POST'])
+def delete_course(id):
+    # Your delete logic here
+    course = Course.query.get_or_404(id)
+    db.session.delete(course)
+    db.session.commit()
+    flash('Course deleted successfully', 'success')
+    return redirect(url_for('main.dashboard'))
+
+# Creating the prompting.
 @main.route('/generate-analogy', methods=['POST'])
 def generate_analogy():
     data = request.json
@@ -123,6 +204,38 @@ def generate_analogy():
             'analogy': json.loads(analogy)["analogy"],
             'quiz': json.loads(quiz_text)
         })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# Creating the prompting.
+@main.route('/create-analogy', methods=['POST'])
+def create_analogy():
+    data = request.json
+    interest = data.get('interest')
+    concept = data.get('concept')
+
+    # Prompt for generating the analogy
+    prompt_analogy = f"Explain {concept} using an analogy related to {interest}. Make it simple and engaging."
+    try:
+        analogy = askGPT("You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.",
+                                  prompt_analogy)
+
+        # Extracting values from the JSON object
+
+        new_course = Course(
+            name='test',  # The title from the split content
+            difficulty_matrix='test',  # The difficulty description from the split content
+            description='',  # The short description from the split content
+            content=analogy,  # Set the analogy as the course content
+            questions='quiz_text',  # Set the generated quiz text as the questions
+            author_id=current_user.id  # Ensure this is the current logged-in user's ID
+        )
+        db.session.add(new_course)
+        db.session.commit()
+        return ''
+
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
