@@ -236,7 +236,5 @@ def create_analogy():
         db.session.add(new_course)
         db.session.commit()
         return ''
-
-
     except Exception as e:
         return jsonify({'error': str(e)}), 500
