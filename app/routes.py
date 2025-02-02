@@ -76,6 +76,7 @@ def logout():
     flash('Logged out successfully.', 'success')
     return redirect(url_for('main.home'))
 
+
 # All methods for courses ---------------------
 @main.route('/course/create', methods=['GET', 'POST'])
 @login_required
