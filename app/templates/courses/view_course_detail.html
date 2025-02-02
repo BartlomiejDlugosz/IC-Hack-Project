@@ -1,11 +1,73 @@
-<h2>{{ course.name }}</h2>
-<p><strong>Difficulty Level:</strong> {{ course.difficulty_matrix }}</p>
-<p><strong>Description:</strong> {{ course.description }}</p>
-<p><strong>Content:</strong> {{ course.content }}</p>
-<p><strong>Questions:</strong> {{ course.questions }}</p>
-<p><strong>Author:</strong> {{ course.author.username }}</p>  <!-- Show the author's username -->
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Content</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+  <div class="max-w-4xl mx-auto p-6">
+    <!-- Course Details Card -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+      <h2 class="text-3xl font-bold mb-4 dark:text-white">{{ course.name }}</h2>
+      <div class="space-y-2">
+        <p class="text-gray-700 dark:text-gray-300">
+          <span class="font-semibold">Difficulty Level:</span> {{ course.difficulty_matrix }}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          <span class="font-semibold">Description:</span> {{ course.description }}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          <span class="font-semibold">Content:</span> {{ course.content }}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          <span class="font-semibold">Questions:</span> {{ course.questions }}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          <span class="font-semibold">Author:</span> {{ course.author.username }}
+        </p>
+      </div>
+      <!-- Action Buttons -->
+      <div class="mt-6 flex space-x-4">
+        <a href="{{ url_for('main.edit_course', id=course.id) }}"
+           class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded">
+          Edit
+        </a>
+        <form method="POST" action="{{ url_for('main.delete_course', id=course.id) }}">
+          <button type="submit"
+                  class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
 
-<a href="{{ url_for('main.edit_course', id=course.id) }}" class="btn btn-warning">Edit</a>
-<form method="POST" action="{{ url_for('main.delete_course', id=course.id) }}" style="display:inline;">
-    <button type="submit" class="btn btn-danger">Delete</button>
-</form>
+     <!-- Sub Categories Section -->
+    <div class="mt-10">
+      <h3 class="text-2xl font-bold mb-4 dark:text-white">Sub Categories</h3>
+      <ul class="space-y-6">
+        {% for sub_category in course.content %}
+          <li class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+            <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">{{ sub_category.name }}</h4>
+            <!-- Nested List without bullet points and with slight indent -->
+            <ul class="ml-4 list-none space-y-2">
+              {% for sub_sub_category in sub_category.content %}
+                <li>
+                  <a href="{{ url_for('main.view_sub_category', id=sub_sub_category.id) }}"
+                     class="text-gray-900 dark:text-gray-100
+                            hover:text-gray-100 dark:hover:text-gray-900
+                            transition-colors duration-200">
+                    {{ sub_sub_category.name }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
