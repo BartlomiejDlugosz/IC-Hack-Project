@@ -3,10 +3,10 @@ import os
 import openai
 from flask_login import login_user, login_required, logout_user, current_user
 from dotenv import load_dotenv
-import json
-
 from app import db, login_manager
 from app.models import User, Course
+import json
+
 from openai_integration import askGPT
 import json
 
@@ -76,31 +76,39 @@ def logout():
     flash('Logged out successfully.', 'success')
     return redirect(url_for('main.home'))
 
+
 # All methods for courses ---------------------
 @main.route('/course/create', methods=['GET', 'POST'])
 @login_required
 def create_course():
+    print(request)
+    interest = current_user.key_interest
+    print(interest)
     if request.method == 'POST':
         name = request.form['name']
         difficulty_matrix = request.form['difficulty_matrix']
         description = request.form['description']
         content = request.form['content']
         questions = request.form['questions']
-
+        # interest = request.form['interest']
+        prompt_analogy = f"Explain {name} using an analogy related to . Make it simple and engaging."
+        print('Prompt Prompt')
+        print(prompt_analogy)
+        analogy = askGPT(f"Create the table of content for the following prompt to learn the topic, do not add bolding {prompt_analogy}", prompt_analogy)
         # Create the new course with the logged-in user as the author
         new_course = Course(
             name=name,
             difficulty_matrix=difficulty_matrix,
             description=description,
-            content=content,
+            content=analogy,
             questions=questions,
             author_id=current_user.id  # Set the author_id to the current user's ID
         )
+
         db.session.add(new_course)
         db.session.commit()
         flash('Course created successfully!', 'success')
         return redirect(url_for('main.dashboard'))
-
     return render_template('courses/create_course.html')
 
 @main.route('/course/edit/<int:id>', methods=['GET', 'POST'])
@@ -214,7 +222,6 @@ def create_analogy():
         analogy = askGPT("You are an expert teacher specializing in making complex concepts easy to understand using real-life analogies.",
                                   prompt_analogy)
 
-
         # Extracting values from the JSON object
 
         new_course = Course(
@@ -229,33 +236,6 @@ def create_analogy():
         db.session.commit()
         return ''
 
-        # question_lines = quiz_text.split('\n')
-        # question = question_lines[0]
-        # options = {line[0]: line[3:] for line in question_lines[1:5]}  # Extract A-D options
-        # correct_answer_line = [line for line in question_lines if "Correct Answer:" in line]
-        # correct_answer = correct_answer_line[0].split(":")[-1].strip() if correct_answer_line else "A"
-        # print(contents)
-        # print('Loading')
-        # new_course = Course(
-        #     name=contents[0],  # The title from the split content
-        #     difficulty_matrix=contents[2],  # The difficulty description from the split content
-        #     description=contents[1],  # The short description from the split content
-        #     content=analogy,  # Set the analogy as the course content
-        #     questions=quiz_text,  # Set the generated quiz text as the questions
-        #     author_id=current_user.id  # Ensure this is the current logged-in user's ID
-        #     )
-        # print('Loading')
-        # db.session.add(new_course)
-        # db.session.commit()
-        # print('Loading')
-        # return jsonify({
-        #     'analogy': analogy,
-        #     'quiz': {
-        #         'question': question,
-        #         'options': options,
-        #         'correct_answer': correct_answer
-        #     }
-        # })
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
