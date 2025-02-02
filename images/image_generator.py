@@ -52,6 +52,10 @@ class DalleProcessor:
         {concept_breakdown}
         * Generate this image. Remove any text.
     """
+        if len(text)>1000:
+            text = text[:1000]
+
+
         return text
 
     def generate_random_filename(self, length=13):
