@@ -12,16 +12,17 @@
               <a href="{{ url_for('main.view_course', id=course.id) }}" class="backgroundcolor list-group-item list-group-item-action">
                 <div class="card-product-infos">
 
-                  <h5 class="card-txt"><i class="fa-solid fa-book"></i>  {{ course.name }}</h2>
+                  <h5 class="card-txt"><i class="fa-solid fa-book"></i>  {{ course.name }}</h5>
                   <p class="card-txt">{{ course.description[:100] }}...</p>
                   <small class="card-txt">{{ course.difficulty_matrix }}</small>
                 </div>
               </a>
             </div>
-            </div>
             {% else %}
                 <p>No courses found.
             {% endfor %}
+
+            </div>
             <div class="container padding-40">
               <a href="{{ url_for('main.create_course') }}" class="btn btn-flat">Create a New Course</a>
             </div>
