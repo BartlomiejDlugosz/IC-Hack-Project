@@ -88,13 +88,39 @@ def create_course():
         name = request.form['name']
         difficulty_matrix = request.form['difficulty_matrix']
         description = request.form['description']
-        content = request.form['content']
         questions = request.form['questions']
         # interest = request.form['interest']
-        prompt_analogy = f"Explain {name} using an analogy related to . Make it simple and engaging."
+        prompt_analogy = f"""
+        Here is a description provided by the user about why they want to participate in this course.
+        {description}
+        Create a table of content for a course named {name} with a difficulty level of {difficulty_matrix}, targeted to help the user best achieve their desired goal."""
         print('Prompt Prompt')
         print(prompt_analogy)
-        analogy = askGPT(f"Create the table of content for the following prompt to learn the topic, do not add bolding {prompt_analogy}", prompt_analogy)
+        analogy = askGPT("""
+You are teaching someone to learn to code.
+You must include at least 6 different submodules and at least 5 different blocks for each submodule.
+Return the table of contents for the course in the following JSON format exactly:
+
+{
+  "content": [
+      {
+         "title": "Your submodule here",
+         "blocks": [
+              {"block": "Your content here"},
+              {"block": "Your content here"},
+              {"block": "Your content here"}
+         ]
+      },
+      {
+         "title": "Your submodule here",
+         "blocks": [
+              {"block": "Your content here"}
+         ]
+      }
+  ]
+}
+""", prompt_analogy)
+        print(analogy)
         # Create the new course with the logged-in user as the author
         new_course = Course(
             name=name,
@@ -142,7 +168,15 @@ def view_courses():
 @main.route('/course/<int:id>')
 def view_course(id):
     course = Course.query.get_or_404(id)
-    return render_template('courses/view_course_detail.html', course=course)
+    print(course.content)
+    try:
+        parsed_content = json.loads(course.content)
+        print("parsed successfully")
+    except Exception as e:
+        print(e)
+        parsed_content = []
+    print(course.content)
+    return render_template('courses/view_course_detail.html', course=course, parsed_content=parsed_content)
 
 @main.route('/course/delete/<int:id>', methods=['POST'])
 def delete_course(id):

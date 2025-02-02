@@ -20,9 +20,6 @@
           <span class="font-semibold">Description:</span> {{ course.description }}
         </p>
         <p class="text-gray-700 dark:text-gray-300">
-          <span class="font-semibold">Content:</span> {{ course.content }}
-        </p>
-        <p class="text-gray-700 dark:text-gray-300">
           <span class="font-semibold">Questions:</span> {{ course.questions }}
         </p>
         <p class="text-gray-700 dark:text-gray-300">
@@ -48,24 +45,25 @@
     <div class="mt-10">
       <h3 class="text-2xl font-bold mb-4 dark:text-white">Sub Categories</h3>
       <ul class="space-y-6">
-        {% for sub_category in course.content %}
-          <li class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-            <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">{{ sub_category.name }}</h4>
-            <!-- Nested List without bullet points and with slight indent -->
-            <ul class="ml-4 list-none space-y-2">
-              {% for sub_sub_category in sub_category.content %}
-                <li>
-                  <a href="{{ url_for('main.view_sub_category', id=sub_sub_category.id) }}"
-                     class="text-gray-900 dark:text-gray-100
-                            hover:text-gray-100 dark:hover:text-gray-900
-                            transition-colors duration-200">
-                    {{ sub_sub_category.name }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% endfor %}
+        {% for section in parsed_content.content %}
+  <li class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">{{ section.title }}</h4>
+    <!-- Nested List without bullet points and with slight indent -->
+    <ul class="ml-4 list-none space-y-2">
+      {% for block in section.blocks %}
+        <li>
+          <span class="text-gray-900 dark:text-gray-100 transition-colors duration-200">
+            <a href="/block/???"
+               class="text-gray-900 dark:text-gray-100
+                            hover:text-gray-100 dark:hover:text-gray-500
+                            transition-colors duration-200">{{ block.block }}</a>
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+{% endfor %}
+
       </ul>
     </div>
   </div>
