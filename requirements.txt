@@ -4,3 +4,12 @@ flask-session
 flask-sqlalchemy
 werkzeug
 python-dotenv
+numpy <2
+tensorflow==2.15
+opencv-python 
+efficientnet
+keras-ocr 
+matplotlib 
+openai
+dotenv
+
