@@ -1,3 +1,7 @@
+rag template taken from [ https://github.com/anchouls/rag-template]( https://github.com/anchouls/rag-template)
+Modified by pov, @Sauciu1
+
+
 # Rag-template
 
 This template demonstrates a FastAPI server with **Retrieval-Augmented Generation (RAG)**. 

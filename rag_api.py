@@ -8,7 +8,6 @@ class ds_knowledge_base():
         """Accesses the index for ground-truth database (wikipedia download)"""
         self.index =llama.LlamaIndexManager(main_folder="rag/wikipedia_cs/")
         
-
     def query(self, prompt):
         """Makes a query while searching the index first;
         If no information starts the response with ***"""
@@ -16,6 +15,7 @@ class ds_knowledge_base():
         Prompt: {prompt}"""
         result = self.index.query_index(prompt_text)
         return result
+    
 
 class user_knowledge_base():
     def __init__(self, user_id = "000001"):
@@ -45,14 +45,11 @@ class user_knowledge_base():
             file_path = os.path.join(self.data_path, f"{random_string}.txt")
             return file_path
         
-
         file_path = generate_random_path()
-
         with open(file_path, 'w') as file:
             file.write(interaction_text)
 
         self.index.add_to_index(self.data_path)
-
 
 
 if __name__ == "__main__":
@@ -66,12 +63,3 @@ if __name__ == "__main__":
 
     user_kb.update_memory("The user enjoys fishing.")
     print(user_kb.query("What did the learner find difficult?"))
-
-
-
-        
-
-
-
-
-        
