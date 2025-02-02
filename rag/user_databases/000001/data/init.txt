@@ -1,0 +1,1 @@
+This database stores information about the user, who is here to learn computer science. The goal is to provide their past interactions for higher prompt relevance
