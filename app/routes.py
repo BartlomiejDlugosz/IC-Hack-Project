@@ -101,6 +101,7 @@ def create_course():
             questions=questions,
             author_id=current_user.id  # Set the author_id to the current user's ID
         )
+
         db.session.add(new_course)
         db.session.commit()
         flash('Course created successfully!', 'success')
