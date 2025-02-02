@@ -1,6 +1,9 @@
 from dotenv import load_dotenv
+#USE pip3 install python-dotenv
 from openai import OpenAI
 import os
+
+#USE pip3 install python-dotenv
 
 # Load environment variables from .env file
 load_dotenv()

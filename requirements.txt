@@ -10,4 +10,5 @@ efficientnet
 keras-ocr 
 matplotlib 
 openai
+dotenv
 

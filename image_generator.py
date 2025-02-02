@@ -1,21 +1,20 @@
-#This generates an image in about 30 s
-
+# Iam not sure why, but this appears to be working, POV
 
 import random
 import string
 import requests
-import keras_ocr
-import numpy as np
-import cv2
+
 import math
-import matplotlib.pyplot as plt
 from openai import OpenAI
 import os
+import asyncio
+from dotenv import load_dotenv
+#USE pip3 install python-dotenv
+
 
 
 class DalleProcessor:
-    def __init__(self):
-        key = os.environ.get("OPENAI_KEY")
+    def __init__(self, key):
         self.client = OpenAI(
         api_key=key)
         
@@ -89,8 +88,13 @@ class DalleProcessor:
 
 
 class OCRProcessor:
+    # This makes it better for async function to run
+    import keras_ocr
+    import numpy as np
+    import cv2
     def __init__(self):
-        self.pipeline = keras_ocr.pipeline.Pipeline()
+
+        self.pipeline = self.keras_ocr.pipeline.Pipeline()
 
     def midpoint(self, x1, y1, x2, y2):
         """Calculate the midpoint between two points."""
@@ -109,13 +113,13 @@ class OCRProcessor:
         np.array: The inpainted image without text.
         """
         # Read image
-        img = keras_ocr.tools.read(img_path)
+        img = self.keras_ocr.tools.read(img_path)
 
         # Generate (word, box) tuples
         prediction_groups = self.pipeline.recognize([img])
 
         # Create a mask with the same dimensions as the image
-        mask = np.zeros(img.shape[:2], dtype="uint8")
+        mask = self.np.zeros(img.shape[:2], dtype="uint8")
 
         for box in prediction_groups[0]:
             x0, y0 = box[1][0]
@@ -129,16 +133,16 @@ class OCRProcessor:
             thickness = int(math.sqrt((x2 - x1)**2 + (y2 - y1)**2))
 
             # Apply line mask over detected text
-            cv2.line(mask, (x_mid0, y_mid0), (x_mid1, y_mi1), 255, thickness)
+            self.cv2.line(mask, (x_mid0, y_mid0), (x_mid1, y_mi1), 255, thickness)
 
         # Apply inpainting
-        img = cv2.inpaint(img, mask, 7, cv2.INPAINT_NS)
+        img = self.cv2.inpaint(img, mask, 7, self.cv2.INPAINT_NS)
 
         return img
     
     def save_image(self, img, path):
         """Save an image to the specified path."""
-        cv2.imwrite(path, img)
+        self.cv2.imwrite(path, img)
         print(f"Image saved at {path}")
 
 
@@ -158,11 +162,40 @@ if __name__ == "__main__":
 
 
     
-    image_generator = DalleProcessor()
-    ocr_processor = OCRProcessor() # Initialize this first if 
-    saved_image_path  = image_generator.generate_and_save(hobby, topic, analogy, concept_breakdown)
+async def main():
 
-    ocr_processor.inpaint_and_save(saved_image_path, saved_image_path)
+        
+    load_dotenv()
+    openai_key = os.environ.get("OPENAI_KEY")
+    
+    print("dalle init")
+
+    if openai_key is None:
+        raise ValueError("OPENAI_KEY environment variable not set")
+    
+
+    image_generator = DalleProcessor(openai_key)
+
+
+
+
+
+    loop = asyncio.get_event_loop()
+
+    ocr_main = await loop.run_in_executor(None, OCRProcessor)
+    
+    
+    saved_image_path = await loop.run_in_executor(None, image_generator.generate_and_save, hobby, topic, analogy, concept_breakdown)
+
+    ocr_main.inpaint_and_save(saved_image_path, saved_image_path)
 
     print(saved_image_path)
+
+    return saved_image_path
+
+if __name__ == "__main__":
+    
+    
+    asyncio.run(main())
+
 
