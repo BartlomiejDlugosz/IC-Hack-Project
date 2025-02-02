@@ -10,11 +10,11 @@
     <div class="container mt-5">
         <h2>{{ section.title }}</h2>
         <div class="list-group">
-            {% for item in section.contents %}
+            {% for item in section.content %}
                 {% if item.type == 'info' %}
                     <div class="list-group-item">
-                        <h5>{{ item.title }}</h5>
-                        <p>{{ item.info }}</p>
+                        <h5>{{ item.subtitle }}</h5>
+                        <p>{{ item. }}</p>
                     </div>
                 {% elif item.type == 'question' %}
                     <div class="list-group-item">

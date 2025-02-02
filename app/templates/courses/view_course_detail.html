@@ -52,15 +52,16 @@
     <ul class="ml-4 list-none space-y-2">
       {% for block in section.blocks %}
         <li>
-          <span class="text-gray-900 dark:text-gray-100 transition-colors duration-200">
-            <a href="/block/???"
-               class="text-gray-900 dark:text-gray-100
-                            hover:text-gray-100 dark:hover:text-gray-500
-                            transition-colors duration-200">{{ block.block }}</a>
-          </span>
+          <form method="POST" action="{{ url_for('main.view_block') }}" class="inline">
+            <!-- Hidden input to send the block value -->
+            <input type="hidden" name="block" value="{{ block.block }}">
+            <button type="submit" class="text-gray-900 dark:text-gray-100 transition-colors duration-200 hover:text-gray-100 dark:hover:text-gray-500">
+              {{ block.block }}
+            </button>
+          </form>
         </li>
       {% endfor %}
-    </ul>
+    </ul>    
   </li>
 {% endfor %}
 

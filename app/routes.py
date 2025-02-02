@@ -9,6 +9,7 @@ import json
 
 from openai_integration import askGPT
 import json
+from create_section import create_section
 
 # Load environment variables from .env file
 load_dotenv()
@@ -30,13 +31,14 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        interest = request.form['key_interest']
 
         if User.query.filter_by(username=username).first():
             flash('Username already exists', 'danger')
             return redirect(url_for('main.register'))
-
         new_user = User(username=username)
         new_user.set_password(password)
+        new_user.key_interest = interest
         db.session.add(new_user)
         db.session.commit()
         flash('Registration successful! Please log in.', 'success')
@@ -269,7 +271,22 @@ def create_analogy():
         db.session.add(new_course)
         db.session.commit()
         return ''
-
-
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@main.route('/view_block', methods=['POST'])
+@login_required
+def view_block():
+    block_name = request.form.get('block')  # Safely get the block value
+    # print(f"Block Name: {block_name}")      # Debugging output
+    interest = current_user.key_interest
+    print(interest)
+    try:
+        section_data = create_section(interest, block_name).get_json()
+        section = json.loads(section_data['section'])
+        return render_template('section_display.html', section=section)
+    except Exception as e:
+        flash(f'Error generating section: {str(e)}', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    
