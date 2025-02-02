@@ -4,18 +4,6 @@
 <body>
     <div class="container padding-top">
         <h2>Login</h2>
-
-        <!-- Flash messages for feedback -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="list-unstyled">
-                    {% for category, message in messages %}
-                        <li class="alert alert-{{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-
         <!-- Login Form -->
         <form method="POST">
             <div class="form-group">
