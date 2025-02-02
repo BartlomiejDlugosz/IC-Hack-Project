@@ -130,3 +130,10 @@
   align-content: center;
   align-items: center;
 }
+
+.centered {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
