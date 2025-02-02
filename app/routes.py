@@ -91,7 +91,7 @@ def create_course():
         prompt_analogy = f"Explain {name} using an analogy related to . Make it simple and engaging."
         print('Prompt Prompt')
         print(prompt_analogy)
-        analogy = askGPT(f"Create the table of content for the following prompt to learn the topic {prompt_analogy}", prompt_analogy)
+        analogy = askGPT(f"Create the table of content for the following prompt to learn the topic, do not add bolding {prompt_analogy}", prompt_analogy)
         # Create the new course with the logged-in user as the author
         new_course = Course(
             name=name,
