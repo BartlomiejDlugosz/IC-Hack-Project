@@ -1,0 +1,37 @@
+<!-- ...existing code... -->
+<div class="container mt-5">
+    <h2>Multiple Choice Question Preset</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="question">Question</label>
+            <input type="text" class="form-control" id="question" name="question" value="{{ preset.question }}" required>
+        </div>
+        <div class="form-group">
+            <label for="optionA">Option A</label>
+            <input type="text" class="form-control" id="optionA" name="optionA" value="{{ preset.options.A }}" required>
+        </div>
+        <div class="form-group">
+            <label for="optionB">Option B</label>
+            <input type="text" class="form-control" id="optionB" name="optionB" value="{{ preset.options.B }}" required>
+        </div>
+        <div class="form-group">
+            <label for="optionC">Option C</label>
+            <input type="text" class="form-control" id="optionC" name="optionC" value="{{ preset.options.C }}" required>
+        </div>
+        <div class="form-group">
+            <label for="optionD">Option D</label>
+            <input type="text" class="form-control" id="optionD" name="optionD" value="{{ preset.options.D }}" required>
+        </div>
+        <div class="form-group">
+            <label for="correctAnswer">Correct Answer</label>
+            <select class="form-control" id="correctAnswer" name="correctAnswer" required>
+                <option value="A" {% if preset.correct_answer == 'A' %}selected{% endif %}>A</option>
+                <option value="B" {% if preset.correct_answer == 'B' %}selected{% endif %}>B</option>
+                <option value="C" {% if preset.correct_answer == 'C' %}selected{% endif %}>C</option>
+                <option value="D" {% if preset.correct_answer == 'D' %}selected{% endif %}>D</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<!-- ...existing code... -->

@@ -1,23 +1,29 @@
-<form method="POST">
-  <div >
-    <label for="name">Course Name</label>
-    <input type="text" class="form-control" id="name" name="name" required>
-</div>
-<div class="form-group">
-  <label for="difficulty_matrix">Difficulty Matrix</label>
-  <input type="text" class="form-control" id="difficulty_matrix" name="difficulty_matrix" required>
-</div>
+{% extends "base.html" %}
+{% block content %}
+<div class="container padding-top">
+  <h1> What would you like to learn?</h1>
+  <form method="POST">
+    <div >
+      <label for="name">What shall you name it?</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+  </div>
   <div class="form-group">
-      <label for="description">Description</label>
-      <textarea class="form-control" id="description" name="description" required></textarea>
+    <label for="difficulty_matrix">How difficult would you like it to be?</label>
+    <input type="text" class="form-control" id="difficulty_matrix" name="difficulty_matrix" required>
   </div>
-  <div class="form-group" style="display: none">
-      <label for="content">Content</label>
-      <textarea class="form-control" id="content" name="content" value="" ></textarea>
-  </div>
-  <div class="form-group" style="display: none">
-      <label for="questions">Questions</label>
-      <textarea class="form-control" id="questions" name="questions" value=""></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Create Course</button>
-</form>
+    <div class="form-group">
+        <label for="description">Can you elaborate on what you wish to see in the course?</label>
+        <textarea class="form-control" id="description" name="description" required></textarea>
+    </div>
+    <div class="form-group" style="display: none">
+        <label for="content">Content</label>
+        <textarea class="form-control" id="content" name="content" value="" ></textarea>
+    </div>
+    <div class="form-group" style="display: none">
+        <label for="questions">Questions</label>
+        <textarea class="form-control" id="questions" name="questions" value=""></textarea>
+    </div>
+    <button type="submit" class="btn btn-flat">Create Course</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Display</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>{{ section.title }}</h2>
+        <div class="list-group">
+            {% for item in section.content %}
+                {% if item.type == 'info' %}
+                    <div class="list-group-item">
+                        <h5>{{ item.subtitle }}</h5>
+                        <p>{{ item. }}</p>
+                    </div>
+                {% elif item.type == 'question' %}
+                    <div class="list-group-item">
+                        <h5>{{ item.question }}</h5>
+                        <form>
+                            {% for option in item.options %}
+                                <div class="form-check"></div></div>
+                            {% endfor %}
+                        </ul>
+                        <p><strong>Correct Answer:</strong> {{ item.correct_answer }}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
