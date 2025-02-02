@@ -3,3 +3,11 @@ flask-login
 flask-session
 flask-sqlalchemy
 werkzeug
+numpy <2
+tensorflow==2.15
+opencv-python 
+efficientnet
+keras-ocr 
+matplotlib 
+openai
+
